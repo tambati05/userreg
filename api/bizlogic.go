@@ -4,8 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
-	"usereg/database" // Adjust the import path based on your project structure
+	"userreg/database" // Adjust the import path based on your project structure
 )
+
+func RegisterUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error{
+	return database.RegisterUser(db, w, r)
+}
 
 // UpdateUserLogic updates a user's details by ID
 func UpdateUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
