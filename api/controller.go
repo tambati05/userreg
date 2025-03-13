@@ -5,12 +5,14 @@ import (
 	"net/http"
 )
 
-func RegisterUserHandler(db *sql.DB) http.HandleFunc{
+func RegisterUserHandler(db *sql.DB) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request){
+		//Check if the request method is POST
 		if r.Method != http.MethodPost {
 			http.Error(w, "Method not allowed",http.StatusMethodNotAllowed)
 			return
 		}
+		//Call the Register logic to create new user
 		if err := RegisterUserLogic(db, w, r); err!=nil{
 			http.Error(w, err.Error(),http.StatusInternalServerError)
 			return
@@ -28,9 +30,9 @@ func UpdateUserHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		// Call the logic to update user info
-		if err := UpdateUserLogic(db, w, r); err != nil {
+	/*	if err := UpdateUserLogic(db, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
-		}
+		}*/
 	}
 }

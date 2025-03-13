@@ -1,10 +1,10 @@
-package database
+package dataservice
 
 import(
 	"database/sql"
 	"encoding/json"
 	"net/http"
-	model "userreg/module"
+	"userreg/model"
 )
 
 func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error{
