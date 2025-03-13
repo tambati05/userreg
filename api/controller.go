@@ -30,9 +30,9 @@ func UpdateUserHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		// Call the logic to update user info
-	/*	if err := UpdateUserLogic(db, w, r); err != nil {
+		if err := UpdateUserLogic(db, w, r); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
-		}*/
+		}
 	}
 }
