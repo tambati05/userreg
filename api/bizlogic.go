@@ -4,15 +4,24 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
-	"usereg/database" // Adjust the import path based on your project structure
+	"userreg/dataservice"
+	// Adjust the import path based on your project structure
 )
+
+// LoginUserLogic handles the logic for logging in a user
+func LoginUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
+	// Perform basic validations here if needed
+
+	// Call the LoginUser function from the dataservice package to handle login logic
+	return dataservice.LoginUser(db, w, r)
+}
 
 // UpdateUserLogic updates a user's details by ID
 func UpdateUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	// Extract user ID from URL parameters
 	id := r.URL.Path[len("/users/"):]
 
-	var user database.User
+	var user dataservice.User
 
 	// Decode the request body into the User struct
 	decoder := json.NewDecoder(r.Body)
@@ -22,7 +31,7 @@ func UpdateUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	}
 
 	// Update the user in the database
-	if err := database.UpdateUser(db, id, user); err != nil {
+	if err := dataservice.UpdateUser(db, id, user); err != nil {
 		http.Error(w, "Error updating user", http.StatusInternalServerError)
 		return err
 	}
