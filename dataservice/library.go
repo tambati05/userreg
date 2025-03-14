@@ -24,7 +24,23 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error{
 	return json.NewEncoder(w).Encode(user)
 }
 
-func UpdateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func UpdateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
+	var user dataservice.User
+
+	// Decode the incoming JSON request
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		return errors.New("invalid request body")
+	}
+
+	// Update user details in the database
+	_, err := db.Exec("UPDATE users SET password = ? WHERE username = ?", user.Password, user.Username)
+	if err != nil {
+		return errors.New("failed to update user info")
+	}
+
+	// Send a success response
+	w.Write([]byte("User information updated successfully"))
+	return nil
 }
 
 // DeleteUser deletes a user from the database by ID.
