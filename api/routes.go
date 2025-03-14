@@ -9,4 +9,5 @@ import (
 func RegisterRoutes(db *sql.DB) {
 	http.HandleFunc("/register", RegisterUserHandler(db))
 	http.HandleFunc("/update", UpdateUserHandler(db)) // Custom route name for updating user info
+	http.HandleFunc("/users/", controller.DeleteUserHandler(db)) // Route for deleting a user
 }

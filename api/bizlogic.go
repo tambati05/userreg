@@ -36,3 +36,28 @@ func UpdateUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	w.Write([]byte("User updated successfully"))
 	return nil
 }
+
+// DeleteUser deletes a user by ID
+func DeleteUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
+    // Extract user ID from URL parameters
+    id := r.URL.Path[len("/users/"):]
+
+    // Delete user from the database
+    result, err := db.Exec("DELETE FROM users WHERE id = ?", id)
+    if err != nil {
+        return errors.New("failed to delete user")
+    }
+
+    rowsAffected, err := result.RowsAffected()
+    if err != nil {
+        return errors.New("failed to delete user")
+    }
+
+    if rowsAffected == 0 {
+        return errors.New("user not found")
+    }
+
+    // Send a success response (204 No Content)
+    w.WriteHeader(http.StatusNoContent)
+    return nil
+}

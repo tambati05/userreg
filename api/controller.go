@@ -36,3 +36,20 @@ func UpdateUserHandler(db *sql.DB) http.HandlerFunc {
 		}
 	}
 }
+
+// DeleteUserHandler handles the DELETE request for a user
+func DeleteUserHandler(db *sql.DB) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        // Check if the request method is DELETE
+        if r.Method != http.MethodDelete {
+            http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+            return
+        }
+
+        // Call the logic to delete user
+        if err := bizlogic.DeleteUser(db, w, r); err != nil {
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+    }
+}

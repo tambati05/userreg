@@ -26,3 +26,25 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error{
 
 func UpdateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
+
+// DeleteUser deletes a user from the database by ID.
+func DeleteUser(db *sql.DB, w http.ResponseWriter, r *http.Request, id string) error {
+    query := "DELETE FROM users WHERE id = ?"
+    result, err := db.Exec(query, id)
+    if err != nil {
+        return err
+    }
+
+    rowsAffected, err := result.RowsAffected()
+    if err != nil {
+        return err
+    }
+
+    if rowsAffected == 0 {
+        http.Error(w, "User not found", http.StatusNotFound)
+        return nil // User not found, but we don't return an error to the caller.
+    }
+
+    w.WriteHeader(http.StatusNoContent)
+    return nil
+}
