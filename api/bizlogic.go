@@ -11,6 +11,14 @@ func RegisterUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error
 	return dataservice.RegisterUser(db, w, r)
 }
 
+// LoginUserLogic handles the logic for logging in a user
+func LoginUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
+	// Perform basic validations here if needed
+
+	// Call the LoginUser function from the dataservice package to handle login logic
+	return dataservice.LoginUser(db, w, r)
+}
+
 // UpdateUserLogic updates a user's details by ID
 func UpdateUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	// Extract user ID from URL parameters
