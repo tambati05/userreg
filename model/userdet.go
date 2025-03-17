@@ -1,7 +1,7 @@
 package model
 
-// User represents a user entity.
 type User struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username    string `json:"username"`
+	NewUsername string `json:"new_username"` 
+	Password    string `json:"password"`
 }

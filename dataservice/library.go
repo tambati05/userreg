@@ -53,47 +53,48 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 }
 
 func UpdateUser(db *sql.DB, user model.User) error {
-	//var user model.User
-
-	// Decode the incoming JSON request
-	/*
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		return errors.New("invalid request body")
-	}*/
-
-	// Update user details in the database
-	_, err := db.Exec("UPDATE user SET password = ? WHERE username = ?", user.Password, user.Username)
+	// Assuming the user wants to change their old username to a new one, along with the password.
+	
+	_, err := db.Exec("UPDATE user SET new_username = ?, password = ? WHERE username = ?", user.NewUsername, user.Password, user.Username)
 	if err != nil {
-		return errors.New("failed to update user info")
+		return errors.New("failed to update user info") // Return an error if the update query fails.
 	}
 
-	// Send a success response
-	//w.Write([]byte("User information updated successfully"))
+	return nil // Successfully updated the user info.
+}
+
+// DeleteUser deletes a user by username.
+func DeleteUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
+
+	var user model.User
+	// Decode the request body into the user struct
+    if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+        http.Error(w, "Invalid request body", http.StatusBadRequest)
+        return err
+    }
+
+	// Delete user from the database by username.
+	result, err := db.Exec("DELETE FROM user WHERE username = ?", user.Username)
+	if err != nil {
+			http.Error(w, "Database error", http.StatusInternalServerError)
+			return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+			http.Error(w, "Database error", http.StatusInternalServerError)
+			return err
+	}
+
+	if rowsAffected == 0 {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return nil
+	}
+
+	// Send a success response (204 No Content)
+	w.WriteHeader(http.StatusNoContent)
 	return nil
 }
-
-// DeleteUser deletes a user from the database by ID.
-func DeleteUser(db *sql.DB, w http.ResponseWriter, r *http.Request, id string) error {
-    query := "DELETE FROM user WHERE id = ?"
-    result, err := db.Exec(query, username)
-    if err != nil {
-        return err
-    }
-
-    rowsAffected, err := result.RowsAffected()
-    if err != nil {
-        return err
-    }
-
-    if rowsAffected == 0 {
-        http.Error(w, "User not found", http.StatusNotFound)
-        return nil // User not found, but we don't return an error to the caller.
-    }
-
-    w.WriteHeader(http.StatusNoContent)
-    return nil
-}
-
 
 
 
