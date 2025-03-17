@@ -37,7 +37,7 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 
 	// Retrieve the stored password for the user from the database
 	var storedPassword string
-	err := db.QueryRow("SELECT password FROM users WHERE username = ?", user.Username).Scan(&storedPassword)
+	err := db.QueryRow("SELECT password FROM user WHERE username = ?", user.Username).Scan(&storedPassword)
 	if err != nil {
 		return errors.New("user not found") // Return an error if the user doesn't exist
 	}
@@ -52,29 +52,30 @@ func LoginUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func UpdateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
-	var user dataservice.User
+func UpdateUser(db *sql.DB, user model.User) error {
+	//var user model.User
 
 	// Decode the incoming JSON request
+	/*
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		return errors.New("invalid request body")
-	}
+	}*/
 
 	// Update user details in the database
-	_, err := db.Exec("UPDATE users SET password = ? WHERE username = ?", user.Password, user.Username)
+	_, err := db.Exec("UPDATE user SET password = ? WHERE username = ?", user.Password, user.Username)
 	if err != nil {
 		return errors.New("failed to update user info")
 	}
 
 	// Send a success response
-	w.Write([]byte("User information updated successfully"))
+	//w.Write([]byte("User information updated successfully"))
 	return nil
 }
 
 // DeleteUser deletes a user from the database by ID.
 func DeleteUser(db *sql.DB, w http.ResponseWriter, r *http.Request, id string) error {
-    query := "DELETE FROM users WHERE id = ?"
-    result, err := db.Exec(query, id)
+    query := "DELETE FROM user WHERE id = ?"
+    result, err := db.Exec(query, username)
     if err != nil {
         return err
     }

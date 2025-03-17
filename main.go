@@ -10,8 +10,9 @@ import(
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func main{
-	dsn := "root:123456@tcp(1c4ce498c4e7:3306)/user?parseTime=true"
+func main(){
+	//dsn := "root:123456@tcp(1c4ce498c4e7:3306)/user"
+	dsn := "root:123456@tcp(localhost:3306)/user"
 
 	db, err := sql.Open("mysql",dsn)
 	if err != nil{

@@ -64,7 +64,7 @@ func DeleteUserHandler(db *sql.DB) http.HandlerFunc {
         }
 
         // Call the logic to delete user
-        if err := bizlogic.DeleteUser(db, w, r); err != nil {
+        if err := DeleteUser(db, w, r); err != nil {
             http.Error(w, err.Error(), http.StatusInternalServerError)
             return
         }

@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"userreg/dataservice" 
+	"userreg/model"
+	"errors"
+	"fmt"
 )
 
 func RegisterUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error{
@@ -22,19 +25,20 @@ func LoginUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 // UpdateUserLogic updates a user's details by ID
 func UpdateUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 	// Extract user ID from URL parameters
-	id := r.URL.Path[len("/users/"):]
-
-	var user dataservice.User
+	//id := r.URL.Path[len("/users/"):]
+	fmt.Println("method")
+	var user model.User
 
 	// Decode the request body into the User struct
 	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(&user); err != nil {
 		http.Error(w, "Invalid input", http.StatusBadRequest)
 		return err
 	}
 
 	// Update the user in the database
-	if err := dataservice.UpdateUser(db, id, user); err != nil {
+	if err := dataservice.UpdateUser(db, user); err != nil {
 		http.Error(w, "Error updating user", http.StatusInternalServerError)
 		return err
 	}
@@ -48,10 +52,10 @@ func UpdateUserLogic(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
 // DeleteUser deletes a user by ID
 func DeleteUser(db *sql.DB, w http.ResponseWriter, r *http.Request) error {
     // Extract user ID from URL parameters
-    id := r.URL.Path[len("/users/"):]
+  //  id := r.URL.Path[len("/users/"):]
 
     // Delete user from the database
-    result, err := db.Exec("DELETE FROM users WHERE id = ?", id)
+   // result, err := db.Exec("DELETE FROM user WHERE id = ?", id)
     if err != nil {
         return errors.New("failed to delete user")
     }
